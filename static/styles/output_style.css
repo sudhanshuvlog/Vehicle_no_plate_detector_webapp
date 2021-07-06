@@ -1,0 +1,19 @@
+.container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .heading {
+    width: 400px;
+    text-align: center;
+    padding: 10px;
+    /*background-color: paleturquoise;*/
+    border-style: groove;
+    border-width: thick;
+    /*border-color: lightseagreen;*/
+    border-color: cornsilk;
+    color: cornsilk;
+    font-weight: bold;
+    font-family: Tahoma;
+    
+  }

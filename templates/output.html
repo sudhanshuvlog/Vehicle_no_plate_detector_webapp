@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html id="bgimg">
+<title>Car Details</title>
+
+<head>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+
+<body id="bgimg" style="background-image: url(/static/img/bg1.jpeg);
+background-repeat: no-repeat;
+background-position: center;
+background-size: cover;
+height: 100%;">>
+
+<div class="container">
+    <h1 class="heading">Number Plate Details</h1>
+  </div>
+
+  
+    <div id="output_show"> 
+    <center><h2 , style="color:white">Vehicle Number Plate: {{vechile_number_show}}</h2> </center> 
+    <h3  style="color:white">Description: {{Description_show}}</h3>
+    <h3  style="color:white">CarMake: {{CarMake_show}}</h3>
+    <h3  style="color:white">CarMode: {{CarModel_show}}</h3>
+    <h3  style="color:white">MakeDescription: {{MakeDescription_show}}</h3>
+    <h3  style="color:white">FuelType: {{FuelType_show}}</h3>
+    <h3  style="color:white">Owner: {{Owner_show}}</h3>
+    <h3  style="color:white">VehicleType: {{VehicleType_show}}</h3>
+    <h3  style="color:white">ImageUrl: {{ImageUrl_show}}</h3>
+    <h3  style="color:white">Location: {{Location_show}}</h3>
+</div>
+     
+<script> 
+	let name = '{{error}}'; 
+    //alert(name);
+	 if (name=="No vechile Plate Found"){
+         //alert("aaya");
+        elem = document.getElementById('output_show');
+        elem.innerHTML=" <center> <h1 style='color:white'>No Vehicle Plate Found In Image!! Try Again</h1> </center>";
+     }
+</script>
+
+ </body>
+ </head>

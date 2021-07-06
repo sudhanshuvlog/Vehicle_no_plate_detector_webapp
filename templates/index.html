@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html id="bgimg">
+<title>Car Details Finder</title>
+
+<head>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/style.css') }}">
+  <script src="{{ url_for('static',filename='script.js') }}"> </script>
+
+  <body id="bgimg" style="background-image: url(/static/img/bg1.jpeg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 100%;">
+     
+     
+    <div class="container">
+      <h1 class="heading">Vehicle Detail Finder</h1>
+    </div>
+
+
+    
+   <center> <div class="imginput">
+      <form enctype="multipart/form-data", action = "/output" method = "POST">
+        <label for="image">Choose File</label>
+        <input type="file", name="car_image"  , onchange="loadFile(event)" >
+        <br /> <br/>
+        <img id="output" width="200" />
+        <div class="container_center">
+          <input class="form-submit-button" , type="submit", value="Upload">
+        </div>
+      </form>
+    </div>
+    </center>
+
+  <!--  <div class="container_right">
+      <div id="detail">
+        Output:
+
+         
+      </div>
+    </div>
+-->
+<!--<video autoplay muted loop id="myVideo">
+        <source src="bg.mp4" type="video/mp4">
+      </video>-->
+</body>
+</head>
