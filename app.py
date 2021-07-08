@@ -64,51 +64,64 @@ def upload_file():
             filename="car."+file_extension #doing this so that everytime their will be same name of file otherwise user's given file name will came
             #print(filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            vechile_number=no_plate_and_ocr_finder(filename)
+            vechile_number, len_of_vechile_number=no_plate_and_ocr_finder(filename)
             print(vechile_number)
             if vechile_number=="No vechile Plate Found":
                 print("No vechile Plate Found")
                 return  render_template('output.html',error="No vechile Plate Found")
             else:
-                vechile_clean_number=cleaning_vechile_number(vechile_number)
-                #print(vechile_clean_number)
+                vechile_clean_number=cleaning_vechile_number(vechile_number,len_of_vechile_number)
+                print(vechile_clean_number)
                 vechile_details=Vechile_info_finder(vechile_clean_number)
-                '''vechile_details={'Description': 'HERO HONDA PASSION PRO CAST - DISC BRAKE- ELECTRIC START',
-                'RegistrationYear': '2010',
-                'CarMake': {'CurrentTextValue': 'HERO HONDA'},
-                'CarModel': {'CurrentTextValue': 'PASSION PRO'},
-                'Variant': 'CAST - DISC BRAKE- ELECTRIC START',
-                'EngineSize': {'CurrentTextValue': '100'},
-                'MakeDescription': {'CurrentTextValue': 'HERO HONDA'},
-                'ModelDescription': {'CurrentTextValue': 'PASSION PRO'},
-                'NumberOfSeats': {'CurrentTextValue': '2'},
-                'VechileIdentificationNumber': 'MBLHA10AHAGM03219',
-                'EngineNumber': '03110',
-                'FuelType': {'CurrentTextValue': 'Petrol'},
-                'RegistrationDate': '18/12/2010',
-                'Owner': '',
-                'Fitness': '',
-                'Insurance': '',
-                'PUCC': '',
-                'VehicleType': 'M-CYCLE/SCOOTER(2WN)',
-                'Location': 'RTO, ALLAHABAD',
-                'ImageUrl': 'http://www.carregistrationapi.in/image.aspx/@SEVSTyBIT05EQSBQQVNTSU9OIFBSTyBDQVNUIC0gRElTQyBCUkFLRS0gRUxFQ1RSSUMgU1RBUlQ='}
-                '''
-                Description=vechile_details['Description']
-                RegistrationYear=vechile_details['RegistrationYear']
-                CarMake=vechile_details['CarMake']['CurrentTextValue']
-                CarModel=vechile_details['CarModel']['CurrentTextValue']
-                MakeDescription=vechile_details['MakeDescription']['CurrentTextValue']
-                FuelType=vechile_details['FuelType']['CurrentTextValue']
-                Owner=vechile_details['Owner']
-                VehicleType=vechile_details['VehicleType']
-                Location=vechile_details['Location']
-                ImageUrl=vechile_details['ImageUrl']
-                 
-                return render_template('output.html',vechile_number_show=vechile_clean_number,vechile_details_show=vechile_details,
-                Description_show=Description,RegistrationYear_show=RegistrationYear,CarMake_show=CarMake,CarModel_show=CarModel,
-                MakeDescription_show=MakeDescription,FuelType_show=FuelType,Owner_show=Owner,VehicleType_show=VehicleType,ImageUrl_show=ImageUrl,
-                Location_show=Location)
+                if vechile_details=="No Info Found":
+                    return render_template('output.html',vechile_number_show=vechile_clean_number,error="No Info Found")
+                else:
+                    try:
+                        Description=vechile_details['Description']
+                    except:
+                        Description=""
+                    try:
+                        RegistrationYear=vechile_details['RegistrationYear']
+                    except:
+                        RegistrationYear=""
+                    try:
+                        CarMake=vechile_details['CarMake']['CurrentTextValue']
+                    except:
+                        CarMake=""
+                    try:
+                        CarModel=vechile_details['CarModel']['CurrentTextValue']
+                    except:
+                        CarModel=""
+                    try:
+                        MakeDescription=vechile_details['MakeDescription']['CurrentTextValue']
+                    except:
+                        MakeDescription=""
+                    try:
+                        FuelType=vechile_details['FuelType']['CurrentTextValue']
+                    except:
+                        FuelType=""
+                    try:
+                        Owner=vechile_details['Owner']
+                    except:
+                        Owner="Null"
+                     
+                    try:
+                        VehicleType=vechile_details['VehicleType']
+                    except:
+                        VehicleType="UnKnown"
+                    try:
+                        Location=vechile_details['Location']
+                    except:
+                        Location=""
+                    try:
+                        ImageUrl=vechile_details['ImageUrl']
+                    except:
+                        ImageUrl=""
+                    
+                    return render_template('output.html',vechile_number_show=vechile_clean_number,vechile_details_show=vechile_details,
+                    Description_show=Description,RegistrationYear_show=RegistrationYear,CarMake_show=CarMake,CarModel_show=CarModel,
+                    MakeDescription_show=MakeDescription,FuelType_show=FuelType,Owner_show=Owner,VehicleType_show=VehicleType,ImageUrl_show=ImageUrl,
+                    Location_show=Location)
                  
 
     #return """{{car_number}}"""
@@ -127,7 +140,7 @@ def no_plate_and_ocr_finder(filename):
      #print(test_car)
      plate=model.detectMultiScale(test_car)
      print(plate)
-     print(type(plate))
+     #print(type(plate))
       
      try: #here used try cache so that if no no_plate found then below statement can not give error,
          #tried to use if else instead of try catche but it was giving error...
@@ -138,29 +151,26 @@ def no_plate_and_ocr_finder(filename):
         no_plate=test_car[y1:y2,x1:x2] 
         tess.pytesseract.tesseract_cmd= (r"C:Program Files\Tesseract-OCR\tesseract")
         text=tess.image_to_string(no_plate)
-        print(text)
-        return text
+        #print(text)
+        print(len(text))
+        return (text,len(text))
      except:
          return "No vechile Plate Found"
       
 
-def cleaning_vechile_number(text):
+def cleaning_vechile_number(text ,len_of_vechile_number):
     i=0
     final_no_plate=[]
-    while i<20:
-        try:
-            if text[i]=="|" or text[i]=="-" or text[i]=="," or text[i]=="" or text[i]==" " or  text[i]==")" or text[i]=="(" :
-                #print("hatao isko")
-                #print(text[i])
-                pass
-            else:
-                if text[i]=="\n":
-                    break
-                else:
-                    final_no_plate.append(text[i])
-        except:
-            break
+    while i<len_of_vechile_number:
+        if text[i]=="A" or text[i]=="B" or text[i]=="C"or text[i]=="D"or text[i]=="E"or text[i]=="F"or text[i]=="G"or text[i]=="H" or text[i]=="I"or text[i]=="J"or text[i]=="K"or text[i]=="L"or text[i]=="M" or text[i]=="N"or text[i]=="O"or text[i]=="P"or text[i]=="Q"or text[i]=="R"or text[i]=="S"or text[i]=="T"or text[i]=="U"or text[i]=="V"or text[i]=="W" or text[i]=="X" or text[i]=="Y" or text[i]=="Z" :
+            final_no_plate.append(text[i])
+            #print(text[i])
+            
+        elif text[i]=="1" or text[i]=="2" or text[i]=="3"or text[i]=="4"or text[i]=="5"or text[i]=="6"or text[i]=="7"or text[i]=="8" or text[i]=="9"or text[i]=="0":
+            final_no_plate.append(text[i])
         i=i+1
+    #print(final_no_plate)
+         
     def listToString(s): 
     
         # initialize an empty string
@@ -172,16 +182,21 @@ def cleaning_vechile_number(text):
 
         # return string  
         return str1 
+    
     return(listToString(final_no_plate)) 
 
 def Vechile_info_finder(plate_number):
-    r = requests.get("http://www.regcheck.org.uk/api/reg.asmx/CheckIndia?RegistrationNumber={0}&username=sudhanshu12222".format(str(plate_number)))
-    data = xmltodict.parse(r.content)
-    jdata = json.dumps(data)
-    df = json.loads(jdata)
-    df1 = json.loads(df['Vehicle']['vehicleJson'])
-    #print(df1)
-    return df1
+    try:
+        #print("info finder")
+        r = requests.get("http://www.regcheck.org.uk/api/reg.asmx/CheckIndia?RegistrationNumber={0}&username=sudhanshu122222".format(str(plate_number)))
+        data = xmltodict.parse(r.content)
+        jdata = json.dumps(data)
+        df = json.loads(jdata)
+        df1 = json.loads(df['Vehicle']['vehicleJson'])
+        print(df1)
+        return df1
+    except:
+        return "No Info Found"
 
  
 if __name__ == 'webapp1':
